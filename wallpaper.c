@@ -5,7 +5,7 @@
 
 extern double shape_var;
 
-char directory[200];
+char directory[MAXDIRECTORY];
 FILE *fpout;
 FILE *fp_isopointal_out;
 
@@ -459,7 +459,7 @@ double packing_fraction(struct shapetype *shape, struct wallpaper_group_type gro
       iter++;
       currclash=0;    
       
-      //if (iter>1) printf("iter %d min_clashratio %15.10f\n", iter, min_clashratio);
+      //if (!EMPTY_OUTPUT) printf("iter %d\n", iter);
       
       //min_clashratio = 9999.999;
       
@@ -469,6 +469,9 @@ double packing_fraction(struct shapetype *shape, struct wallpaper_group_type gro
 	  //if (1) {
 	  for (s=0; s<countreplicas; s++) {
 	    // s begins at double_count, which starts at 0. this is to avoid doubling up when checking pairs. the first time we take a shape, double_count is 0 so we check it for clashes against every replica. we then add 1 to double_count. we continue (without checking clashes) until we find a replica on a new occupied site, at which point m=0. we then check this replica against all replicas EXCEPT the original replica we checked when double_count was 0, as this pairing has already been checked for clashes.
+
+	    //printf("r=%d s=%d\n", r,s);
+	    
 	    if (tests==0) {
 	      currclash = clash_polygon(shape,shape,group,cellsides,cellangles,occupiedsites,sitevariables,replicaindex[r],replicaindex[s],flips,tests);
 	      if (currclash) {
@@ -538,7 +541,7 @@ int initialize_structure_in_group(struct shapetype *shape, struct wallpaper_grou
   int countreplicas=0;
   int i;
   int os;
-  char oslist[MAXFILENAME];
+  char oslist[MAXWYCKOFFS];
   char filename[MAXFILENAME];
   FILE *fp;
   int flips_int;
@@ -669,7 +672,7 @@ int initialize_structure_in_group(struct shapetype *shape, struct wallpaper_grou
   }
   oslist[numoccsites] = '\0';
 
-  sprintf(filename, "%s/solution_%s_%s_%s_%.3f.svg", directory, shape->name, group.label, oslist, shape_var);
+  sprintf(filename, "%s/%s_%s_%s_%s_%.3f.svg", directory, "solution", shape->name, group.label, oslist, shape_var);
 
   if (checkfile==1) {
     /* try to load existing solution */
@@ -704,6 +707,7 @@ int initialize_structure_in_group(struct shapetype *shape, struct wallpaper_grou
       if (!EMPTY_OUTPUT) printf("No existing solution -  File: %s cannot be loaded.\n", filename);
     }
   }
+  if (!EMPTY_OUTPUT) printf("countvar = %d\n", countvar);
   return(countvar);
 }
 
@@ -742,7 +746,7 @@ void uniform_best_packing_in_isopointal_group(struct shapetype *shape, struct wa
 
   int flip_site = -1;
 
-  char oslist[MAXFILENAME];
+  char oslist[MAXWYCKOFFS];
   char filename[MAXFILENAME];
   FILE *fp;
   
@@ -783,7 +787,7 @@ void uniform_best_packing_in_isopointal_group(struct shapetype *shape, struct wa
       if (isfile==1) {
 	kT_start=kT_finish*10.0;
       }
-
+      
       phi = packing_fraction(shape, group, cellsides, cellangles, occupiedsites, sitevariables, flips, tests, &clash_rejection);
     }
     if (!EMPTY_OUTPUT) printf("initial packing fraction = %f\n", phi);
@@ -954,6 +958,15 @@ void uniform_best_packing_in_isopointal_group(struct shapetype *shape, struct wa
     for ( os=0; os<numoccsites; os++ ) {
             fprintf(fpout, "\t%s\t%d", btoa(best_flips[os]), group.wyckoffs[occupiedsites[os]].multiplicity);
     }
+
+    // now print extra details: the fractional coordinates of each image
+    for ( os=0; os<numoccsites; os++ ) {
+	    for (m=0; m<group.wyckoffs[occupiedsites[os]].multiplicity; m++) {
+	      fractcoords(group.wyckoffs[occupiedsites[os]].image[m].coord_coeffs, sitevariables[os], fcoords);
+	      fprintf(fpout, "\t%.4f\t%.4f", fcoords[0], fcoords[1]);
+	    }
+    }
+    
     fprintf(fpout,"\n");
     fprintf(fp_isopointal_out,"%.3f\t%.6f\t%.7f\t%.3f\t%s\t%8s\t%s\t%d\t%d\t%.5f\t%d\t%d\t%.4f\t%.4f\t%.4f\t%.6f\t%.6f\t%.6f\t%.6f\n", shape_var, max_phi, area(shape), (100.0*rejections)/tests, shape->name, group.label, oslist, cycle+1, MAXSTEPS, max_step_size, SHAPE_RESOLUTION, numoccsites, shape->minr, shape->maxr, shape->minr/shape->maxr, max_phi_in_cycle, *cellsides[0], *cellsides[1], *cellangles[0]*180.0/M_PI);
 
@@ -1145,7 +1158,7 @@ void uniform_best_packing_in_group(struct shapetype *shape, struct wallpaper_gro
     }
 
     char format[] = "%s/output_%s_%s_%c_%d.dat"; //DAN this paragraph
-    char filename[sizeof format+200];
+    char filename[MAXFILENAME];
     sprintf(filename,format,directory,shape->name,group.label,group.wyckoffs[occupiedsites[i][0]].letter,numoccsites);
 
     fp_isopointal_out = fopen(filename, "a"); //DAN
@@ -1159,6 +1172,7 @@ void uniform_best_packing_in_group(struct shapetype *shape, struct wallpaper_gro
 int main (int argc, char *argv[]) {
 
   struct shapetype fourier;
+  struct shapetype fileshape;
   struct shapetype circle;
   struct shapetype square;
   struct shapetype wobblycircle;
@@ -1224,6 +1238,8 @@ int main (int argc, char *argv[]) {
     }
   }
 
+  sprintf(directory,"output");
+
   if (strcmp(argv[2], "fourier")==0) {
     for (dd=0; dd<2; dd++) {
       for (ff=0; ff<FOURIER_TERMS; ff++) {
@@ -1236,6 +1252,9 @@ int main (int argc, char *argv[]) {
     sprintf(command, "mkdir %4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f", fcoeff[0][0], fcoeff[0][1], fcoeff[0][2], fcoeff[0][3], fcoeff[0][4], fcoeff[0][5], fcoeff[0][6], fcoeff[0][7], fcoeff[0][8], fcoeff[1][0], fcoeff[1][1], fcoeff[1][2], fcoeff[1][3], fcoeff[1][4], fcoeff[1][5], fcoeff[1][6], fcoeff[1][7], fcoeff[1][8]);
     sprintf(directory, "%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f_%4.2f", fcoeff[0][0], fcoeff[0][1], fcoeff[0][2], fcoeff[0][3], fcoeff[0][4], fcoeff[0][5], fcoeff[0][6], fcoeff[0][7], fcoeff[0][8], fcoeff[1][0], fcoeff[1][1], fcoeff[1][2], fcoeff[1][3], fcoeff[1][4], fcoeff[1][5], fcoeff[1][6], fcoeff[1][7], fcoeff[1][8]);
     system(command);
+  } else if (strcmp(argv[2], "fileshape")==0) {
+    define_fileshape(&fileshape);
+    chosen_shape = &fileshape;
   } else if (strcmp(argv[2], "circle")==0) {
     define_circle(&circle);
     chosen_shape = &circle;

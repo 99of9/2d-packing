@@ -1,3 +1,4 @@
+void define_fileshape(struct shapetype *shape);
 void define_fourier(struct shapetype *shape, double fcoeff[2][FOURIER_TERMS]);
 void define_circle(struct shapetype *c);
 void define_wobblycircle(struct shapetype *shape);

@@ -1216,3 +1216,39 @@ void define_kite (struct shapetype *shape) {
   shape->rotsym = 1;
   shape->mirrors = 2;
 }
+
+//ALI
+void define_fileshape(struct shapetype *shape) {
+  int i;
+  double phi;
+  double x,y;
+  char filename[MAXFILENAME];
+  FILE *fp;
+  double modcheck;
+  sprintf(filename, "fileshape.dat");
+    
+  sprintf(shape->name, "%s", "fileshape");
+  shape->maxr=0.0;
+  shape->minr=100.0;
+  fp = fopen(filename, "r");
+  //check that number of lines in the file is equal to the SHAPE_RESOLUTION
+  
+  for (i=0; i<SHAPE_RESOLUTION; i++) {
+    phi = 2.0*M_PI*i/SHAPE_RESOLUTION;
+    //once we get the x,y from the file, we could check that it is also at this phi value
+
+    fscanf(fp,"%lf %lf", &x, &y);
+
+    if ( fabs(modf( 0.5+(phi-atan(y/x))/M_PI, &modcheck)-0.5) > 0.001 ) {
+      printf("ERROR: fileshape.dat may have a different number of points to SHAPE_RESOLUTION\n These should be equal: %lf %lf %lf\n " , atan(y/x), phi, modf( (phi-atan(y/x))/M_PI, &modcheck));
+      exit(1);
+    }
+    
+    shape->r[i] = pow((x*x+y*y),0.5);
+    if (shape->r[i]>shape->maxr) shape->maxr = shape->r[i]; 
+    if (shape->r[i]<shape->minr) shape->minr = shape->r[i]; 
+  }
+  //could go around the shape and check for symmetries, but for now assume no symmetry
+  shape->rotsym = 1;
+  shape->mirrors = 0;
+}

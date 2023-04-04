@@ -8,6 +8,7 @@
 #define MAX(a, b) (a > b ? a : b)
 #define MIN(a, b) (a > b ? b : a)
 
+#define MAXDIRECTORY 100
 #define MAXFILENAME 200
 #define MAXGROUPNAME 50
 #define MAXMULTIPLICITY 12
@@ -25,13 +26,13 @@
 
 #define EPS 1e-9
 
-#define SHAPE_RESOLUTION 72
+#define SHAPE_RESOLUTION 60
 #define ALLOWFLIPS 1
-#define MAXSTEPS 360000
-#define CYCLES 32
+#define MAXSTEPS 72000
+#define CYCLES 3
 #define POLYGON_REP 1
 
-#define EMPTY_OUTPUT 1
+#define EMPTY_OUTPUT 0
 #define WARNINGS 0
 #define FOURIER_TERMS 9
 
