@@ -3,6 +3,9 @@
 #include "shapes.h"
 #include "fluke.h"
 
+struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS];
+void GroupInit(struct wallpaper_group_type wpgs[]);
+
 extern double shape_var;
 
 char directory[MAXDIRECTORY];
@@ -252,8 +255,14 @@ bool indirect_clash(struct shapetype *shape_a, struct shapetype *shape_b, double
     
   for (scan_sign=1; scan_sign>=-1; scan_sign -= 2) {
 
-    if (tests==0) {
+    //if (tests==0) {
       //If we have just initialised (before doing any moves), and are checking for clashes, we want to check all the way around the edge of each shape, to make sure that by chance the two shapes weren't positioned on top of each other.
+    if (1) {
+      /* switch to doing this always, 2023-06-28, because ALIs chevron-like einstein shapes are failing to clash when the actual particles are 
+	 half overlapping. Consider restoring the above condition (only tests==0) for shapes with less extreme radius ratios between the
+	 minr and maxr.
+       */
+      
       for (ib = -1; ib<SHAPE_RESOLUTION/2; ib++) {
 	theta_tab[ib+1] = fabs((angle_b_int-(1-2*flip_b)*scan_sign*ib)*2.0*M_PI/SHAPE_RESOLUTION-angle_b);
 	//sine_theta_ib_tab[ib] = sin(theta_tab[ib]);
@@ -281,7 +290,7 @@ bool indirect_clash(struct shapetype *shape_a, struct shapetype *shape_b, double
 	  }
 	}
       }
-    } else {
+    } else { /*try to save time by only considering hemispheres of each shape (the hemisphere that points toward the other shape) */
       for (ib = -1; ib<(SHAPE_RESOLUTION/4)+1; ib++) {
 	theta_tab[ib+1] = fabs((angle_b_int-(1-2*flip_b)*scan_sign*ib)*2.0*M_PI/SHAPE_RESOLUTION-angle_b);
 	//sine_theta_ib_tab[ib] = sin(theta_tab[ib]);
@@ -843,6 +852,7 @@ void uniform_best_packing_in_isopointal_group(struct shapetype *shape, struct wa
 	
 	if (vary_index==0) {
 	  /* this is the cell angle. stretch cell sides so that the total area is preserved (to prevent runaway angle collapse) */
+	  /* ALI come back to this if the angle collapses 2023-06-28*/
 	  *cellsides[0] = old_cell0 * sqrt(sin(old_value)/sin(basis[0]));
 	  *cellsides[1] = old_cell1 * sqrt(sin(old_value)/sin(basis[0]));
 	}
@@ -1223,6 +1233,8 @@ int main (int argc, char *argv[]) {
 
   int do_all;
   int study_wallpaper_group=0;
+
+  GroupInit(wallpapergroups);
 
   numoccsites = atoi(argv[1]);
 
