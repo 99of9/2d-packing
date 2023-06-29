@@ -1,6 +1,11 @@
 #include "globals.h"
+#include "groups.h"
 
-struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
+
+void GroupInit(struct wallpaper_group_type wpgs[]) {
+
+
+struct wallpaper_group_type wg0 =
   {"[00]p1",0,0,0,1,1,
    {
      {1,'a', 1, 1, 0,
@@ -9,7 +14,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg1 =  
   {"[01]p2",0,0,0,2,5,
    {
      {1,'a', 0, 2, 0,
@@ -39,7 +46,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg2 =  
   {"[02]pm",0,0,1,2,3,
    {
      {1,'a', 1, 1, 1,
@@ -59,7 +68,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg3 =  
   {"[03]pg",0,0,1,2,1,
    {
      {2,'a', 1, 1, 0,
@@ -69,7 +80,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+
+struct wallpaper_group_type wg4 =  
   {"[04]cm",0,0,1,4,2,  /*num symmetries? 2 or 4; assuming cell to be rectangle?*/
    {
      {2,'a', 1, 1, 1,
@@ -87,7 +100,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg5 =  
   {"[05]p2mm",0,0,1,4,9,
    {
      {1,'a', 0, 2, 2,
@@ -143,7 +158,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg6 =  
   {"[06]p2mg",0,0,1,4,4,
    {
      {2,'a', 0, 2, 0,
@@ -173,7 +190,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+
+struct wallpaper_group_type wg7 =  
   {"[07]p2gg",0,0,1,4,3,
    {
      {2,'a', 0, 2, 0, 
@@ -197,7 +216,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg8 =  
   {"[08]c2mm",0,0,1,8,6,  /*numsymmetries?, rectangle*/
    {
      {2,'a', 0, 2, 2,
@@ -249,7 +270,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+
+struct wallpaper_group_type wg9 =  
   {"[09]p4",1,0,1,4,4,
    {
      {1,'a', 0, 4, 0,
@@ -277,7 +300,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg10 =  
   {"[10]p4mm",1,0,1,8,7,
    {
      {1,'a', 0, 4, 4,
@@ -333,7 +358,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg11 =  
   {"[11]p4gm",1,0,1,8,4,
    {
      {2,'a', 0, 4, 0,
@@ -369,7 +396,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg12 =  
   {"[12]p3",1,1,0,3,4, 
    {
      {1,'a', 0, 3, 0,
@@ -401,7 +430,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg13 =  
   {"[13]p3m1",1,1,0,6,5,
    {
      {1,'a', 0, 3, 3,
@@ -450,7 +481,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg14 =  
   {"[14]p31m",1,1,0,6,4,  
    {
      {1,'a', 0, 3, 3, 
@@ -506,7 +539,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg15 =  
   {"[15]p6",1,1,0,6,4,
    {
      {1,'a', 0, 6, 0,
@@ -549,7 +584,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg16 =  
   {"[16]p6mm",1,1,0,12,6,
    {
      {1,'a', 0, 6, 6, 
@@ -640,7 +677,9 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
-  },
+  };
+  
+struct wallpaper_group_type wg17 =  
   {"[17]p3bd",1,1,0,3,2,
    {
      {1,'b', 0, 3, 0,
@@ -656,5 +695,52 @@ struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS]={
       }
      }
    }
- },
-};
+ };
+
+
+wpgs[0] = wg0;
+wpgs[1] = wg1;
+wpgs[2] = wg2;
+wpgs[3] = wg3;
+wpgs[4] = wg4;
+wpgs[5] = wg5;
+wpgs[6] = wg6;
+wpgs[7] = wg7;
+wpgs[8] = wg8;
+wpgs[9] = wg9;
+wpgs[10] = wg10;
+wpgs[11] = wg11;
+wpgs[12] = wg12;
+wpgs[13] = wg13;
+wpgs[14] = wg14;
+wpgs[15] = wg15;
+wpgs[16] = wg16;
+wpgs[17] = wg17;
+
+/*
+wallpapergroups[0] = wg0;
+wallpapergroups[1] = wg1;
+wallpapergroups[2] = wg2;
+wallpapergroups[3] = wg3;
+wallpapergroups[4] = wg4;
+wallpapergroups[5] = wg5;
+wallpapergroups[6] = wg6;
+wallpapergroups[7] = wg7;
+wallpapergroups[8] = wg8;
+wallpapergroups[9] = wg9;
+wallpapergroups[10] = wg10;
+wallpapergroups[11] = wg11;
+wallpapergroups[12] = wg12;
+wallpapergroups[13] = wg13;
+wallpapergroups[14] = wg14;
+wallpapergroups[15] = wg15;
+wallpapergroups[16] = wg16;
+wallpapergroups[17] = wg17;
+*/
+
+}
+
+// struct wallpaper_group_type wallpapergroups[]={wg0, wg1, wg2, wg3, wg4, wg5, wg6, wg7, wg8, wg9, wg10, wg11, wg12, wg13, wg14, wg15, wg16, wg17};
+
+
+

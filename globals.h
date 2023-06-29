@@ -26,7 +26,7 @@
 
 #define EPS 1e-9
 
-#define SHAPE_RESOLUTION 60
+#define SHAPE_RESOLUTION 96
 #define ALLOWFLIPS 1
 #define MAXSTEPS 72000
 #define CYCLES 3
@@ -94,3 +94,4 @@ struct wallpaper_group_type {
   int num_wyckoffs;
   struct wyckoff_type wyckoffs[MAXWYCKOFFS];
 };
+

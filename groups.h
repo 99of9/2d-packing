@@ -1,1 +1,2 @@
-struct wallpaper_group_type wallpapergroups[NUMWALLPAPERGROUPS];
+
+
